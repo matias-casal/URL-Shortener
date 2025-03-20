@@ -68,7 +68,6 @@ describe("Auth Controller", () => {
     it("should register a new user successfully", async () => {
       // Arrange
       mockRequest.body = {
-        username: "testuser",
         email: "test@example.com",
         password: "password123",
       };
@@ -106,7 +105,6 @@ describe("Auth Controller", () => {
           data: expect.objectContaining({
             type: "users",
             attributes: expect.objectContaining({
-              username: "testuser",
               email: "test@example.com",
             }),
             meta: expect.objectContaining({
@@ -120,7 +118,6 @@ describe("Auth Controller", () => {
     it("should return error if email already exists", async () => {
       // Arrange
       mockRequest.body = {
-        username: "testuser",
         email: "existing@example.com",
         password: "password123",
       };
@@ -159,7 +156,6 @@ describe("Auth Controller", () => {
 
       mockUserRepo.findOneBy.mockResolvedValue({
         id: "user-uuid",
-        username: "testuser",
         email: "test@example.com",
         password: "hashed_password",
         createdAt: new Date(),
@@ -187,7 +183,6 @@ describe("Auth Controller", () => {
             type: "users",
             id: "user-uuid",
             attributes: expect.objectContaining({
-              username: "testuser",
               email: "test@example.com",
             }),
             meta: expect.objectContaining({
@@ -234,7 +229,6 @@ describe("Auth Controller", () => {
 
       mockUserRepo.findOneBy.mockResolvedValue({
         id: "user-uuid",
-        username: "testuser",
         email: "test@example.com",
         password: "hashed_password",
       });
@@ -268,7 +262,6 @@ describe("Auth Controller", () => {
       mockRequest.user = { id: "user-uuid", email: "test@example.com" };
       mockUserRepo.findOneBy.mockResolvedValue({
         id: "user-uuid",
-        username: "testuser",
         email: "test@example.com",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -290,7 +283,6 @@ describe("Auth Controller", () => {
             type: "users",
             id: "user-uuid",
             attributes: expect.objectContaining({
-              username: "testuser",
               email: "test@example.com",
             }),
           }),

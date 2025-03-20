@@ -15,10 +15,6 @@ router.post(
   "/register",
   rateLimiterMiddleware,
   [
-    body("username")
-      .isString()
-      .isLength({ min: 3 })
-      .withMessage("Username must be at least 3 characters"),
     body("email").isEmail().withMessage("Must be a valid email"),
     body("password")
       .isString()

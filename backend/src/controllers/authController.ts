@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 // Register a new user
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
 
     // Check if email already exists
     const existingUser = await userRepository.findOneBy({ email });
@@ -32,7 +32,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     // Create user
     const user = new User();
-    user.username = username;
     user.email = email;
     user.password = hashedPassword;
 
@@ -48,7 +47,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         type: "users",
         id: user.id,
         attributes: {
-          username: user.username,
           email: user.email,
           createdAt: user.createdAt,
         },
@@ -116,7 +114,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         type: "users",
         id: user.id,
         attributes: {
-          username: user.username,
           email: user.email,
           createdAt: user.createdAt,
         },
@@ -180,7 +177,6 @@ export const getCurrentUser = async (
         type: "users",
         id: user.id,
         attributes: {
-          username: user.username,
           email: user.email,
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,

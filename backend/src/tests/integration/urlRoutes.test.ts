@@ -189,7 +189,6 @@ describe("URL Routes Integration Tests", () => {
       // Arrange
       const testUser = {
         id: "user-uuid",
-        username: "testuser",
         email: "test@example.com",
       };
 
