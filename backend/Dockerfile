@@ -10,13 +10,13 @@ RUN apk add --no-cache yarn && \
 
 COPY . .
 
-# Build TypeScript code
-RUN yarn build
+# Make entrypoint script executable
+RUN chmod +x /app/docker-entrypoint.sh
 
-EXPOSE 4000
+# Set the entry point script
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
-# Default command runs the server
-CMD ["yarn", "start"]
+# Build and start the application
+CMD ["sh", "-c", "yarn build && yarn start"]
 
-# Use this as alternative entry point to run tests
-ENTRYPOINT ["docker-entrypoint.sh"] 
+EXPOSE 4000 
