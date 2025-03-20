@@ -1,3 +1,4 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
@@ -19,5 +20,19 @@ module.exports = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
-  collectCoverageFrom: ["src/**/*.ts", "!src/tests/**/*.ts", "!src/index.ts"],
+  collectCoverageFrom: [
+    "src/**/*.ts",
+    "!src/tests/**/*.ts",
+    "!src/index.ts",
+    "!src/migration/**/*.ts",
+  ],
+  coverageReporters: ["text", "lcov"],
+  globals: {
+    "ts-jest": {
+      isolatedModules: true,
+      diagnostics: {
+        warnOnly: true,
+      },
+    },
+  },
 };

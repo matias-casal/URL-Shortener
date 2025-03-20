@@ -11,6 +11,9 @@ import express from "express";
 import { Url } from "../../entities/Url";
 import { User } from "../../entities/User";
 
+// Define mock return types
+type MockReturnType = any;
+
 // Mock database repositories
 const mockUrlRepo = {
   find: jest.fn(),
@@ -36,7 +39,7 @@ jest.mock("../../config/redis", () => ({
     del: jest.fn(),
     increment: jest.fn(),
   },
-  connectRedis: jest.fn().mockResolvedValue(true),
+  connectRedis: jest.fn().mockResolvedValue(true as MockReturnType),
 }));
 
 jest.mock("../../config/database", () => ({
@@ -46,7 +49,7 @@ jest.mock("../../config/database", () => ({
       if (entity === User) return mockUserRepo;
       return null;
     }),
-    initialize: jest.fn().mockResolvedValue(true),
+    initialize: jest.fn().mockResolvedValue(true as MockReturnType),
   },
 }));
 
@@ -58,7 +61,7 @@ jest.mock("jsonwebtoken", () => ({
 
 // Mock Rate Limiter
 jest.mock("../../middleware/rateLimiter", () => ({
-  rateLimiterMiddleware: jest.fn((req, res, next) => next()),
+  rateLimiterMiddleware: jest.fn((req: any, res: any, next: any) => next()),
 }));
 
 // Import after mocking
@@ -102,8 +105,8 @@ describe("URL Routes Integration Tests", () => {
       };
 
       mockUrlRepo.findOne.mockResolvedValue(null);
-      mockUrlRepo.create.mockReturnValue(testUrl);
-      mockUrlRepo.save.mockResolvedValue(testUrl);
+      mockUrlRepo.create.mockReturnValue(testUrl as any);
+      mockUrlRepo.save.mockResolvedValue(testUrl as any);
 
       // Act
       const response = await request
@@ -148,11 +151,11 @@ describe("URL Routes Integration Tests", () => {
         updatedAt: new Date(),
       };
 
-      mockUrlRepo.findOne.mockResolvedValue(testUrl);
+      mockUrlRepo.findOne.mockResolvedValue(testUrl as any);
       mockUrlRepo.save.mockResolvedValue({
         ...testUrl,
         visitCount: 1,
-      });
+      } as any);
 
       // Act
       const response = await request.get("/api/urls/redirect/abc123");
@@ -207,7 +210,7 @@ describe("URL Routes Integration Tests", () => {
         },
       ];
 
-      mockUrlRepo.find.mockResolvedValue(testUrls);
+      mockUrlRepo.find.mockResolvedValue(testUrls as any);
 
       // Act
       const response = await request

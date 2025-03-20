@@ -5,6 +5,9 @@ import { User } from "../../entities/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+// Define mock return type
+type MockReturnType = any;
+
 // Mock dependencies
 jest.mock("../../config/database", () => {
   const mockUserRepo = {
@@ -30,7 +33,7 @@ jest.mock("bcrypt", () => ({
 }));
 
 jest.mock("jsonwebtoken", () => ({
-  sign: jest.fn().mockReturnValue("mock-token"),
+  sign: jest.fn().mockReturnValue("mock-token" as MockReturnType),
 }));
 
 // Import controllers after mocking
@@ -41,7 +44,7 @@ import {
 } from "../../controllers/authController";
 
 describe("Auth Controller", () => {
-  let mockRequest: Partial<Request>;
+  let mockRequest: Partial<Request & { user?: { id: string; email: string } }>;
   let mockResponse: Partial<Response>;
   let mockUserRepo: any;
 
@@ -51,8 +54,8 @@ describe("Auth Controller", () => {
       user: null as any,
     };
     mockResponse = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis(),
+      status: jest.fn().mockReturnThis() as MockReturnType,
+      json: jest.fn().mockReturnThis() as MockReturnType,
     };
 
     mockUserRepo = AppDataSource.getRepository(User);
@@ -72,7 +75,7 @@ describe("Auth Controller", () => {
 
       (
         bcrypt.hash as jest.MockedFunction<typeof bcrypt.hash>
-      ).mockResolvedValue("hashed_password" as never);
+      ).mockResolvedValue("hashed_password" as any);
 
       mockUserRepo.findOneBy.mockResolvedValue(null);
       mockUserRepo.save.mockImplementation((user) => {
@@ -164,7 +167,7 @@ describe("Auth Controller", () => {
 
       (
         bcrypt.compare as jest.MockedFunction<typeof bcrypt.compare>
-      ).mockResolvedValue(true as never);
+      ).mockResolvedValue(true as any);
 
       // Act
       await login(mockRequest as Request, mockResponse as Response);
@@ -238,7 +241,7 @@ describe("Auth Controller", () => {
 
       (
         bcrypt.compare as jest.MockedFunction<typeof bcrypt.compare>
-      ).mockResolvedValue(false as never);
+      ).mockResolvedValue(false as any);
 
       // Act
       await login(mockRequest as Request, mockResponse as Response);
@@ -262,7 +265,7 @@ describe("Auth Controller", () => {
   describe("getCurrentUser", () => {
     it("should return current user details", async () => {
       // Arrange
-      mockRequest.user = { id: "user-uuid" };
+      mockRequest.user = { id: "user-uuid", email: "test@example.com" };
       mockUserRepo.findOneBy.mockResolvedValue({
         id: "user-uuid",
         username: "testuser",
@@ -272,7 +275,10 @@ describe("Auth Controller", () => {
       });
 
       // Act
-      await getCurrentUser(mockRequest as Request, mockResponse as Response);
+      await getCurrentUser(
+        mockRequest as Request & { user: { id: string; email: string } },
+        mockResponse as Response
+      );
 
       // Assert
       expect(mockUserRepo.findOneBy).toHaveBeenCalledWith({

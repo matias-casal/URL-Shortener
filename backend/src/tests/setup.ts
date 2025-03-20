@@ -7,6 +7,9 @@ import { DataSource, DataSourceOptions } from "typeorm";
 // Load environment variables
 dotenv.config({ path: ".env.test" });
 
+// Define mock return type
+type MockReturnType = any;
+
 // Mock Redis service
 jest.mock("../config/redis", () => ({
   redisClient: {
@@ -15,7 +18,7 @@ jest.mock("../config/redis", () => ({
     del: jest.fn(),
     increment: jest.fn(),
   },
-  connectRedis: jest.fn().mockResolvedValue(true),
+  connectRedis: jest.fn().mockResolvedValue(true as MockReturnType),
 }));
 
 // Create a test database connection

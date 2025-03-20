@@ -4,6 +4,9 @@ import { AppDataSource } from "../../config/database";
 import { Url } from "../../entities/Url";
 import { User } from "../../entities/User";
 
+// Define mock return type
+type MockReturnType = any;
+
 // Mock typeorm repository
 jest.mock("../../config/database", () => {
   const mockUrlRepo = {
@@ -47,9 +50,9 @@ describe("URL Controller", () => {
   beforeEach(() => {
     mockRequest = {};
     mockResponse = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis(),
-      redirect: jest.fn().mockReturnThis(),
+      status: jest.fn().mockReturnThis() as MockReturnType,
+      json: jest.fn().mockReturnThis() as MockReturnType,
+      redirect: jest.fn().mockReturnThis() as MockReturnType,
     };
 
     mockUrlRepo = AppDataSource.getRepository(Url);
@@ -73,7 +76,9 @@ describe("URL Controller", () => {
 
       // Mock for QRCode.toDataURL
       jest.mock("qrcode", () => ({
-        toDataURL: jest.fn().mockResolvedValue("mocked-qrcode-data"),
+        toDataURL: jest
+          .fn()
+          .mockResolvedValue("mocked-qrcode-data" as MockReturnType),
       }));
 
       // Act
