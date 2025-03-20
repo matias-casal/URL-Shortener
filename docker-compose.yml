@@ -46,10 +46,11 @@ services:
       - ./frontend:/app
       - /app/node_modules
 
-  # Service for running tests
+  # Service for running tests - not started automatically
   backend-test:
     build: ./backend
     container_name: url-shortener-backend-test
+    profiles: ["test"]
     depends_on:
       - postgres
       - redis
