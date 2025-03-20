@@ -12,24 +12,24 @@ import { User } from "./User";
 @Entity()
 export class Url {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @Column()
-  originalUrl: string;
+  originalUrl!: string;
 
   @Column({ unique: true })
   @Index()
-  slug: string;
+  slug!: string;
 
   @Column({ default: 0 })
-  visitCount: number;
+  visitCount!: number;
 
   @ManyToOne(() => User, (user) => user.urls, { nullable: true })
-  user: User | null;
+  user!: User | null;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

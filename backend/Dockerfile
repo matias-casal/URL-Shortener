@@ -10,7 +10,13 @@ RUN apk add --no-cache yarn && \
 
 COPY . .
 
+# Build TypeScript code
+RUN yarn build
+
 EXPOSE 4000
 
-# Skip build and use dev mode directly
-CMD ["yarn", "dev"] 
+# Default command runs the server
+CMD ["yarn", "start"]
+
+# Use this as alternative entry point to run tests
+ENTRYPOINT ["docker-entrypoint.sh"] 

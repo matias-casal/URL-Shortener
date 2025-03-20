@@ -46,5 +46,28 @@ services:
       - ./frontend:/app
       - /app/node_modules
 
+  # Service for running tests
+  backend-test:
+    build: ./backend
+    container_name: url-shortener-backend-test
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      NODE_ENV: test
+      PORT: 4001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: url_shortener_test
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: test-jwt-secret
+      TEST_TYPE: unit
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: test
+
 volumes:
   postgres_data:
