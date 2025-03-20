@@ -23,11 +23,13 @@ import {
   Visibility,
   VisibilityOff,
   Email as EmailIcon,
+  Person as PersonIcon,
   LockOutlined as LockIcon,
   HowToReg as RegisterIcon
 } from '@mui/icons-material';
 
 const Register: React.FC = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -42,7 +44,7 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password || !confirmPassword) {
+    if (!username || !email || !password || !confirmPassword) {
       setFormError('All fields are required');
       return;
     }
@@ -59,7 +61,7 @@ const Register: React.FC = () => {
     
     try {
       setFormError(null);
-      await register(email, password);
+      await register(username, email, password);
       navigate('/dashboard');
     } catch (err) {
       // Error is handled by context
@@ -118,6 +120,26 @@ const Register: React.FC = () => {
         
         <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
           <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PersonIcon color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            
             <Grid item xs={12}>
               <TextField
                 required
@@ -226,16 +248,21 @@ const Register: React.FC = () => {
           >
             {loading ? (
               <CircularProgress size={24} color="inherit" sx={{ position: 'absolute' }} />
-            ) : 'Register'}
+            ) : (
+              'Sign Up'
+            )}
           </Button>
           
-          <Box textAlign="center">
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              Already have an account?{' '}
-              <Link component={RouterLink} to="/login" color="secondary.main">
-                Sign in
-              </Link>
+          <Divider sx={{ my: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              OR
             </Typography>
+          </Divider>
+          
+          <Box sx={{ textAlign: 'center' }}>
+            <Link component={RouterLink} to="/login" variant="body2" color="primary.main">
+              Already have an account? Sign In
+            </Link>
           </Box>
         </Box>
       </Paper>

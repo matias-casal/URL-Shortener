@@ -6,6 +6,7 @@ import axios from 'axios';
  */
 interface User {
   id: string;
+  username: string;
   email: string;
 }
 
@@ -30,7 +31,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
+  register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
   error: string | null;
@@ -176,6 +177,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('token', data.data.meta.token);
       setUser({
         id: data.data.id,
+        username: data.data.attributes.username,
         email: data.data.attributes.email
       });
       
@@ -197,14 +199,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
   
   /**
-   * User registration with email and password
+   * User registration with username, email and password
    */
-  const register = async (email: string, password: string) => {
+  const register = async (username: string, email: string, password: string) => {
     try {
       setLoading(true);
       setError(null);
       
       const { data } = await axios.post('/api/auth/register', {
+        username,
         email,
         password
       });
@@ -213,6 +216,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('token', data.data.meta.token);
       setUser({
         id: data.data.id,
+        username: data.data.attributes.username,
         email: data.data.attributes.email
       });
       

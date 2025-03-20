@@ -164,7 +164,7 @@ const Header: React.FC = () => {
                         <AccountCircle />
                       </Avatar>
                       <Typography variant="body2" sx={{ mr: 2 }}>
-                        My Account
+                        {user?.username}
                       </Typography>
                     </Box>
                     

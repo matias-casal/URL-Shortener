@@ -250,11 +250,11 @@ const Dashboard: React.FC = () => {
                 mr: 2
               }}
             >
-              {user?.email.charAt(0).toUpperCase()}
+              {user?.username.charAt(0).toUpperCase()}
             </Avatar>
             <Box>
               <Typography variant="h6" sx={{ fontWeight: 'medium' }}>
-                Welcome!
+                Welcome, {user?.username}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Manage all your shortened URLs in one place
