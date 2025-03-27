@@ -37,12 +37,14 @@ export const createShortUrl = async (
     }
 
     // Generate or use custom slug
-    let slug = customSlug || nanoid(6);
+    let slug: string;
 
-    // Check if slug already exists
-    const existingUrl = await urlRepository.findOne({ where: { slug } });
-    if (existingUrl) {
-      if (customSlug) {
+    // If custom slug is provided, verify it's not already in use
+    if (customSlug) {
+      const existingUrl = await urlRepository.findOne({
+        where: { slug: customSlug },
+      });
+      if (existingUrl) {
         res.status(409).json({
           errors: [
             {
@@ -54,8 +56,10 @@ export const createShortUrl = async (
         });
         return;
       }
-      // If auto-generated slug exists, try another one
-      slug = nanoid(6);
+      slug = customSlug;
+    } else {
+      // Use recursive function to generate a unique slug
+      slug = await generateUniqueSlug();
     }
 
     // Create new URL entity
@@ -106,6 +110,22 @@ export const createShortUrl = async (
     });
   }
 };
+
+/**
+ * Recursively generates a unique slug until one is found
+ * that doesn't exist in the database
+ */
+async function generateUniqueSlug(): Promise<string> {
+  const slug = nanoid(6);
+  const existingUrl = await urlRepository.findOne({ where: { slug } });
+
+  if (existingUrl) {
+    // If slug already exists, recursively try again
+    return generateUniqueSlug();
+  }
+
+  return slug;
+}
 
 /**
  * Redirects from a shortened URL to the original destination URL
